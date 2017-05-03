@@ -1,0 +1,38 @@
+syntax = "proto2";
+option optimize_for = SPEED;
+option java_package = "routing";
+
+import "resources/common.proto";
+
+message CommandMessage {
+   required Header header = 1;
+
+    oneof payload {
+      // a client (external) sanity check for testing
+      bool ping = 3;
+      string message = 4;
+      Request request =6;
+      Failure err = 5;
+      Response response = 7;
+      WorkStealingRequest wsr = 8;
+      AddNodeRequest anr = 9;
+      AddNodeResponse nodeResp = 10;
+   }
+}
+
+message WorkStealingRequest{
+	required string host = 2;
+	required int32 port = 3;
+	required string nodeState = 4;
+}
+
+message AddNodeRequest{
+	required string host = 2;
+	required int32 port = 3;
+   optional int32 refId = 4;
+}
+message AddNodeResponse{
+	required int32 nodeId = 2;
+	repeated Node edgeList=3;
+   optional int32 refId = 4;
+}

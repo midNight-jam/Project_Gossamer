@@ -1,0 +1,68 @@
+syntax = "proto2";
+option optimize_for = SPEED;
+option java_package = "pipe.work";
+
+import "resources/common.proto";
+
+
+
+//									//AppendEntries//
+//-------------------------------------------------------------------------------------
+
+/*						Message sent by leader to check the followers' data
+						and to keep it up to date.
+						Contains LeaderId to identify the leader
+						RequestType lets the follower know what needs to be done
+*/				
+
+//--------------------------------------------------------------------------------------
+
+
+message AppendEntries{
+	required int32 leaderId = 1;
+	required Request request = 2;
+	required int64 timeStampOnLatestUpdate = 3;		
+	
+}
+
+//									//AppendEntriesResponse//
+//-------------------------------------------------------------------------------------
+/*					Lets the leader know if the data it(Follower) has is upto date.
+*/				
+//-------------------------------------------------------------------------------------
+
+message AppendEntriesResponse{
+	required IsUpdated isUpdated = 1;
+	
+	enum IsUpdated{
+	
+	YES = 0;
+	NO = 1;
+	
+	}
+}
+
+
+//									//AppendEntriesPacket//
+//-------------------------------------------------------------------------------------
+/*	 Either of the AppendEntries or AppendEntries Response is created 				
+	 and sent through this Message
+*/				
+//--------------------------------------------------------------------------------------
+
+message AppendEntriesPacket{
+
+	required int64 unixTimeStamp = 1;
+
+	
+	 oneof payload{							
+		 AppendEntries appendEntries = 2;
+		 AppendEntriesResponse appendEntriesResponse = 3;		
+	} 
+
+
+}
+
+
+
+
